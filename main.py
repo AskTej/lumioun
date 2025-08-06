@@ -3,12 +3,6 @@ import RPi.GPIO as GPIO
 from utils.logger import get_logger
 from input.keypad import KeypadHandler
 
-# import board
-# import digitalio
-# import busio
-# import adafruit_ssd1306
-# from PIL import Image, ImageDraw, ImageFont
-
 logger = get_logger()
 logger.info("[MAIN] Starting program")
 

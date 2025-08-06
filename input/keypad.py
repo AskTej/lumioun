@@ -1,6 +1,5 @@
 import time
 import RPi.GPIO as GPIO
-import threading
 
 class KeypadHandler:
     def __init__(self, logger):
