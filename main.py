@@ -14,10 +14,10 @@ def key_handler(key):
 
 def main():
     logger.info("[MAIN] Starting main function")
-    GPIO.cleanup()
+    GPIO.setmode(GPIO.BCM)
     print("[MAIN] Keypad Init Start")
     myKeypad = KeypadHandler(logger)
-    myKeypad.keypad.registerKeyPressHandler(key_handler)
+    myKeypad.register_callback(key_handler)
     print("[MAIN] Keypad Init Done")
 
 if __name__ == "__main__":

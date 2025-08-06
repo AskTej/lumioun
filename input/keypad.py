@@ -19,4 +19,10 @@ class KeypadHandler:
         self.keypad = factory.create_keypad(keypad=KEYPAD, row_pins=ROW_PINS, col_pins=COL_PINS)
         logger.info("[KEYPAD] Starting keypad init done")
 
+    def register_callback(self, callback):
+        self.keypad.registerKeyPressHandler(callback)
+
+    def cleanup(self):
+        self.keypad.cleanup()
+
 
