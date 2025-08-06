@@ -14,8 +14,8 @@ class ScreenManager:
             "A->SYSC": [("#", "#->Back"), ("A", "A->WIFITest"), ("B", "B->ServoTest"), ("C", "C->BNOTest"), ("D", "D->Next")],
             "menub": [("#", "#->Back"), ("A", "A->SIM900Test"), ("B", "B->SIM900 Boot"), ("D", "D->Next")],
             "menuc": [("#", "#->Back"), ("A", "A->LOCSIM"), ("B", "B->LOCGPS")],
-            "B->INTL": [("", "Lumioun System"), ("", "SETUP LOCK"), ("", "Enter Digit"), ("", "------"), ("#", "#->Back")],
-            "C->OPNL": [("", "Lumioun System"), ("", "OPEN LOCK"), ("", "Enter Digit"), ("", "------"), ("#", "#->Back")],
+            "B->INTL": [("", "Lumioun System"), ("", "SETUP LOCK"), ("", "Enter Digit"), ("", "------"), ("", ""),("#", "#->Back")],
+            "C->OPNL": [("", "Lumioun System"), ("", "OPEN LOCK"), ("", "Enter Digit"), ("", "------"), ("", ""),("#", "#->Back")],
             "D->LOCC": [("#", "#->Back"), ("A", "A->WIFI Loc"), ("B", "B->SIM900 Loc"), ("C", "C->BNO Loc")],
         }
 

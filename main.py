@@ -4,6 +4,7 @@ from utils.logger import get_logger
 from input.keypad import KeypadHandler
 from output.oled import OLEDDisplay
 from screen.screen import ScreenManager
+from screen.fire import FireManager
 
 logger = get_logger()
 logger.info("[MAIN] Starting program")
@@ -19,6 +20,7 @@ def main():
     print("[MAIN] OLED Init Done")
     time.sleep(1)
     print("[MAIN] Starting main loop")
+    myDb = FireManager(logger)
     myDisplay = OLEDDisplay(logger)
     myNav = ScreenManager(myDisplay, logger)
     myNav.show_screen()
@@ -30,10 +32,7 @@ def main():
             key = myKeypad.get_key()
             if key:
                 print("[MAIN] "+key+" pressed.", key)
-                myNav.handle_input(key)            
-                # if key == '#':
-                #     print("[MAIN] '#' pressed. Exiting loop.")
-                #     break
+                myNav.handle_input(key)                
             time.sleep(0.1)
     except KeyboardInterrupt:
         logger.info("[MAIN] Exiting on Ctrl+C")
