@@ -14,6 +14,7 @@ def key_handler(key):
 
 def main():
     logger.info("[MAIN] Starting main function")
+    GPIO.cleanup()
     print("[MAIN] Keypad Init Start")
     myKeypad = KeypadHandler(logger)
     myKeypad.keypad.registerKeyPressHandler(key_handler)
