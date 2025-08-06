@@ -4,6 +4,7 @@ from pad4pi import rpi_gpio
 from utils.logger import get_logger
 
 logger = get_logger()
+logger.info("[MAIN] Starting program")
 
 def main():
     logger.info("[MAIN] Starting main function")
