@@ -11,12 +11,12 @@ class ScreenManager:
         self.menus = {
             "splas": [("", "Lumioun System"), ("", ""), ("", "Booting")],
             "main": [("", "Lumioun System"), ("A", "A->SYSC"), ("B", "B->INTL"), ("C", "C->OPNL"), ("D", "D->LOCC")],
-            "SYSC": [("#", "#->Back"), ("A", "A->WIFITest"), ("B", "B->ServoTest"), ("C", "C->BNOTest"), ("D", "D->Next")],
+            "A->SYSC": [("#", "#->Back"), ("A", "A->WIFITest"), ("B", "B->ServoTest"), ("C", "C->BNOTest"), ("D", "D->Next")],
             "menub": [("#", "#->Back"), ("A", "A->SIM900Test"), ("B", "B->SIM900 Boot"), ("D", "D->Next")],
             "menuc": [("#", "#->Back"), ("A", "A->LOCSIM"), ("B", "B->LOCGPS")],
-            "INTL": [("", "Lumioun System"), ("", "SETUP LOCK"), ("", "Enter Digit"), ("", "------"), ("#", "#->Back")],
-            "OPNL": [("", "Lumioun System"), ("", "OPEN LOCK"), ("", "Enter Digit"), ("", "------"), ("#", "#->Back")],
-            "LOCC": [("#", "#->Back"), ("A", "A->WIFI Loc"), ("B", "B->SIM900 Loc"), ("C", "C->BNO Loc")],
+            "B->INTL": [("", "Lumioun System"), ("", "SETUP LOCK"), ("", "Enter Digit"), ("", "------"), ("#", "#->Back")],
+            "C->OPNL": [("", "Lumioun System"), ("", "OPEN LOCK"), ("", "Enter Digit"), ("", "------"), ("#", "#->Back")],
+            "D->LOCC": [("#", "#->Back"), ("A", "A->WIFI Loc"), ("B", "B->SIM900 Loc"), ("C", "C->BNO Loc")],
         }
 
         self.current_menu = "splas"
