@@ -1,6 +1,5 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
-import socket
 
 class FireManager:
     def __init__(self, logger):        
@@ -10,7 +9,7 @@ class FireManager:
             cred = credentials.Certificate("./keys/keys.json")
             firebase_admin.initialize_app(cred)
             self.db = firestore.client()
-            self.device_id = socket.gethostname()
+            self.device_id = "DEV1"
             doc_ref = self.db.collection("devices").document(self.device_id)
             init_data = {
                 "deviceid": self.device_id,
