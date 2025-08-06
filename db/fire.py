@@ -10,7 +10,9 @@ class FireManager:
             base_path = os.path.dirname(os.path.abspath(__file__))
             key_path = os.path.join(base_path, "lumina.json")
             cred = credentials.Certificate(key_path)
-            firebase_admin.initialize_app(cred)
+            firebase_admin.initialize_app(cred,{
+                'projectId': 'lumina-9054b'
+            })
             self.db = firestore.client()
             self.device_id = "DEV-001"
             doc_ref = self.db.collection("devices").document(self.device_id)
