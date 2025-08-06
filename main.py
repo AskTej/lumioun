@@ -23,25 +23,25 @@ def main():
     myNav = ScreenManager(myDisplay, logger)
     myNav.show_screen()
     time.sleep(2)
-    myNav.change_screen("main")
+    myNav.main_screen()    
     time.sleep(1)
-    myNav.show_screen()
-    time.sleep(1)
-    while True:
-        key = myKeypad.get_key()
-        if key:
-            print("[MAIN] "+key+" pressed.", key)
-            if key == '#':
-                print("[MAIN] '#' pressed. Exiting loop.")
-                break
-        time.sleep(0.1)
+    try:
+        while True:
+            key = myKeypad.get_key()
+            if key:
+                print("[MAIN] "+key+" pressed.", key)
+                myNav.handle_input(key)            
+                # if key == '#':
+                #     print("[MAIN] '#' pressed. Exiting loop.")
+                #     break
+            time.sleep(0.1)
+    except KeyboardInterrupt:
+        logger.info("[MAIN] Exiting on Ctrl+C")
     myDisplay.clear()
 
 if __name__ == "__main__":
     try:
-        main()
-    except KeyboardInterrupt:
-        logger.info("[MAIN] Exiting on Ctrl+C")
+        main()    
     except Exception as e:
         logger.info(f"[MAIN] Fatal error: {e}")
     finally:
