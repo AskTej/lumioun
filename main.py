@@ -1,3 +1,4 @@
+import time
 import RPi.GPIO as GPIO
 from utils.logger import get_logger
 from input.keypad import KeypadHandler
@@ -16,6 +17,13 @@ def main():
     myKeypad = KeypadHandler(logger)
     myKeypad.register_callback(key_handler)
     print("[MAIN] Keypad Init Done")
+    time.sleep(2)
+    print("[MAIN] Starting main loop")    
+    while True:
+        if pressed_key == '#':
+            print("[MAIN] '#' pressed. Exiting loop.")
+            break
+        time.sleep(0.1)
 
 if __name__ == "__main__":
     try:
