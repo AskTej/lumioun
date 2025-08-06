@@ -18,6 +18,9 @@ def main():
     print("[MAIN] OLED Init Done")
     time.sleep(1)
     print("[MAIN] Starting main loop")
+    myDisplay.displayLines("Lumioun System", 0)
+    myDisplay.displayLines("Booting", 2)
+    time.sleep(2)
     while True:
         key = myKeypad.get_key()
         if key:
