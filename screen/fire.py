@@ -16,8 +16,8 @@ class FireManager:
                 "deviceid": self.device_id,
                 "status": "open",
                 "code": "000000",
-                "clat": 0,
-                "clon": 0,
+                "clat": 19.1332352,
+                "clon": 72.9350144,
                 "dlat": 0,
                 "dlon": 0
             }
