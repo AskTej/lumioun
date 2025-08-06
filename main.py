@@ -6,6 +6,8 @@ from input.keypad import KeypadHandler
 logger = get_logger()
 logger.info("[MAIN] Starting program")
 
+pressed_key = None
+
 def key_handler(key):
     global pressed_key
     print(f"[KEYPAD] You pressed: {key}")
