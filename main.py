@@ -3,6 +3,7 @@ import RPi.GPIO as GPIO
 from utils.logger import get_logger
 from input.keypad import KeypadHandler
 from output.oled import OLEDDisplay
+from screen.screen import ScreenManager
 
 logger = get_logger()
 logger.info("[MAIN] Starting program")
@@ -18,9 +19,14 @@ def main():
     print("[MAIN] OLED Init Done")
     time.sleep(1)
     print("[MAIN] Starting main loop")
-    myDisplay.displayLines("Lumioun System", 0)
-    myDisplay.displayLines("Booting", 2)
+    myDisplay = OLEDDisplay(logger)
+    myNav = ScreenManager(myDisplay, logger)
+    myNav.show_screen()
     time.sleep(2)
+    myNav.change_screen("main")
+    time.sleep(1)
+    myNav.show_screen()
+    time.sleep(1)
     while True:
         key = myKeypad.get_key()
         if key:

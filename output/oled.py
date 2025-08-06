@@ -8,7 +8,7 @@ import time
 class OLEDDisplay:
     def __init__(self, logger):
         self.logger = logger
-        self.logger.info("[OLED] OLED Init")        
+        self.logger.info("[OLED] OLED Init")
         self.resetPin = digitalio.DigitalInOut(board.D27)
         self.resetPin.direction = digitalio.Direction.OUTPUT
 
@@ -40,6 +40,19 @@ class OLEDDisplay:
             self.display.show()
         except Exception as e:
             self.logger.info(f"[OLED] show_centered failed: {e}")
+
+    def displayScreen(self, items):
+        try:
+            self.display.fill(0)
+            self.display.show()
+            image = Image.new("1", (128, 64))
+            draw = ImageDraw.Draw(image)
+            for i, line in enumerate(items):
+                draw.text((0, i * 10), line, font=self.font, fill=255)
+            self.display.image(image)
+            self.display.show()
+        except Exception as e:
+            print(f"[OLED] show_lines failed: {e}")
     
     def clear(self):
         try:
