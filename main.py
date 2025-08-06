@@ -6,25 +6,20 @@ from input.keypad import KeypadHandler
 logger = get_logger()
 logger.info("[MAIN] Starting program")
 
-pressed_key = None
-
-def key_handler(key):
-    global pressed_key
-    print(f"[KEYPAD] You pressed: {key}")
-    pressed_key = key
-
 def main():
     logger.info("[MAIN] Starting main function")    
     print("[MAIN] Keypad Init Start")
-    myKeypad = KeypadHandler(logger)
-    myKeypad.register_callback(key_handler)
+    myKeypad = KeypadHandler(logger)    
     print("[MAIN] Keypad Init Done")
     time.sleep(2)
-    print("[MAIN] Starting main loop")    
+    print("[MAIN] Starting main loop")
     while True:
-        if pressed_key == '#':
-            print("[MAIN] '#' pressed. Exiting loop.")
-            break
+        key = myKeypad.get_key()
+        if key:
+            print("[MAIN] "+key+" pressed.", key)
+            if key == '#':
+                print("[MAIN] '#' pressed. Exiting loop.")
+                break
         time.sleep(0.1)
 
 if __name__ == "__main__":

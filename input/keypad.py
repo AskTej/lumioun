@@ -6,6 +6,9 @@ class KeypadHandler:
     def __init__(self, logger):
         self.logger = logger
         self.logger.info("[KEYPAD] Starting keypad init")
+        GPIO.setmode(GPIO.BCM)            
+        GPIO.setwarnings(False)
+
         self.KEYPAD = [
             ["1","2","3","A"],
             ["4","5","6","B"],
@@ -14,40 +17,24 @@ class KeypadHandler:
         ]
 
         self.ROW_PINS = [6, 13, 19, 26] # R1 → R4
-        self.COL_PINS = [17, 22, 23, 5] # C1 → C4
-
-        self.lock = threading.Lock()
-        self.callback = None
-
-        GPIO.setmode(GPIO.BCM)            
-        GPIO.setwarnings(False)
+        self.COL_PINS = [17, 22, 23, 5] # C1 → C4        
 
         for row in self.ROW_PINS:
             GPIO.setup(row, GPIO.OUT)
             GPIO.output(row, GPIO.LOW)
 
         for col in self.COL_PINS:
-            GPIO.setup(col, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-            GPIO.add_event_detect(col, GPIO.FALLING, callback=self._col_callback, bouncetime=200)
+            GPIO.setup(col, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         logger.info("[KEYPAD] Starting keypad init done")
 
-    def _col_callback(self, channel):        
-        for row_index, row_pin in enumerate(self.ROW_PINS):
+    def get_key(self):
+        for i, row_pin in enumerate(self.ROW_PINS):
             GPIO.output(row_pin, GPIO.HIGH)
-            time.sleep(0.002)
-            if GPIO.input(channel) == GPIO.LOW:
-                col_index = self.COL_PINS.index(channel)
-                key = self.KEYPAD[row_index][col_index]
-                self.logger.info(f"[KEYPAD] Key detected: {key}")
-                if self.callback:
-                    self.callback(key)
-                break
+            for j, col_pin in enumerate(self.COL_PINS):
+                if GPIO.input(col_pin) == GPIO.HIGH:
+                    time.sleep(0.01)
+                    GPIO.output(row_pin, GPIO.LOW)
+                    return self.KEYPAD[i][j]
             GPIO.output(row_pin, GPIO.LOW)
-
-    def register_callback(self, callback_func):        
-        self.callback = callback_func
-        self.logger.info("[KEYPAD] Callback registered")
-
-    def cleanup(self):        
-        GPIO.cleanup()
-        self.logger.info("[KEYPAD] GPIO cleanup complete")
+        time.sleep(0.05)
+        return None
