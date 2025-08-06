@@ -11,7 +11,7 @@ class ScreenManager:
         self.menus = {
             "splas": [("", "Lumioun System"), ("", ""), ("", "Booting")],
             "main": [("", "Lumioun System"), ("A", "SYSC"), ("B", "INTL"), ("C", "OPNL"), ("D", "LOCC")],
-            "menua": [("#", "Back"), ("A", "WIFITest"), ("B", "ServoTest"), ("C", "BNOTest"), ("D", "Next")],
+            "SYSC": [("#", "Back"), ("A", "WIFITest"), ("B", "ServoTest"), ("C", "BNOTest"), ("D", "Next")],
             "menub": [("#", "Back"), ("A", "SIM900Test"), ("B", "SIM900 Boot"), ("D", "Next")],
             "menuc": [("#", "Back"), ("A", "LOCSIM"), ("B", "LOCGPS")],
         }
