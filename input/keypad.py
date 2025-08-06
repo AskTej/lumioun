@@ -12,8 +12,8 @@ class KeypadHandler:
             ["*","0","#","D"]
         ]
 
-        ROW_PINS = [26, 19, 13, 6]
-        COL_PINS = [5, 22, 17, 4]
+        ROW_PINS = [6, 13, 19, 26]   # R1 → R4
+        COL_PINS = [17, 22, 23, 5]  # C1 → C4
 
         factory = rpi_gpio.KeypadFactory()
         self.keypad = factory.create_keypad(keypad=KEYPAD, row_pins=ROW_PINS, col_pins=COL_PINS)
