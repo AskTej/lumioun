@@ -2,6 +2,7 @@ import time
 import RPi.GPIO as GPIO
 from utils.logger import get_logger
 from input.keypad import KeypadHandler
+from output.oled import OLEDDisplay
 
 logger = get_logger()
 logger.info("[MAIN] Starting program")
@@ -11,7 +12,11 @@ def main():
     print("[MAIN] Keypad Init Start")
     myKeypad = KeypadHandler(logger)    
     print("[MAIN] Keypad Init Done")
-    time.sleep(2)
+    time.sleep(1)
+    print("[MAIN] OLED Init Start")
+    myDisplay = OLEDDisplay(logger)
+    print("[MAIN] OLED Init Done")
+    time.sleep(1)
     print("[MAIN] Starting main loop")
     while True:
         key = myKeypad.get_key()
@@ -21,6 +26,7 @@ def main():
                 print("[MAIN] '#' pressed. Exiting loop.")
                 break
         time.sleep(0.1)
+    myDisplay.clear()
 
 if __name__ == "__main__":
     try:
