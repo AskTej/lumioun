@@ -2,12 +2,22 @@ import time
 import RPi.GPIO as GPIO
 from pad4pi import rpi_gpio
 from utils.logger import get_logger
+from input.keypad import KeypadHandler
 
 logger = get_logger()
 logger.info("[MAIN] Starting program")
 
+def key_handler(key):
+    global pressed_key
+    print(f"[KEYPAD] You pressed: {key}")
+    pressed_key = key
+
 def main():
     logger.info("[MAIN] Starting main function")
+    print("[MAIN] Keypad Init Start")
+    myKeypad = KeypadHandler()
+    myKeypad.keypad.registerKeyPressHandler(key_handler)
+    print("[MAIN] Keypad Init Done")
 
 if __name__ == "__main__":
     try:
