@@ -7,7 +7,7 @@ class FireManager:
         self.logger = logger
         self.logger.info("[FIRE] Init")        
         try:
-            cred = credentials.Certificate("../keys/keys.json")
+            cred = credentials.Certificate("./keys/keys.json")
             firebase_admin.initialize_app(cred)
             self.db = firestore.client()
             self.device_id = socket.gethostname()
