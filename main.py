@@ -4,7 +4,7 @@ from utils.logger import get_logger
 from input.keypad import KeypadHandler
 from output.oled import OLEDDisplay
 from screen.screen import ScreenManager
-from screen.fire import FireManager
+from db.fire import FireManager
 
 logger = get_logger()
 logger.info("[MAIN] Starting program")
