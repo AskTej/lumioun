@@ -1,6 +1,4 @@
-import time
 import RPi.GPIO as GPIO
-from pad4pi import rpi_gpio
 from utils.logger import get_logger
 from input.keypad import KeypadHandler
 
@@ -13,8 +11,7 @@ def key_handler(key):
     pressed_key = key
 
 def main():
-    logger.info("[MAIN] Starting main function")
-    GPIO.setmode(GPIO.BCM)
+    logger.info("[MAIN] Starting main function")    
     print("[MAIN] Keypad Init Start")
     myKeypad = KeypadHandler(logger)
     myKeypad.register_callback(key_handler)
