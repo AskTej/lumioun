@@ -63,15 +63,28 @@ class ScreenManager:
 
         if key == "#":
             self.go_back()
-        elif label == "Next":
-            self.logger.info("[SCREEN] Next page not implemented")
+
+        elif label == "D->Next" or label == "Next":            
+            sysc_pages = ["A->SYSC", "menub", "menuc"]
+            if self.current_menu in sysc_pages:
+                idx = sysc_pages.index(self.current_menu)
+                next_idx = (idx + 1) % len(sysc_pages)
+                self.stack.append(self.current_menu)
+                self.current_menu = sysc_pages[next_idx]
+                self.page = 0
+                self.show_screen()
+            else:
+                self.logger.info("[SCREEN] No next page for this menu")
+
         elif label in self.menus:
             self.change_screen(label)
+
         elif label in ACTIONS:
             self.logger.info(f"[SCREEN] Executing action: {label}")
             try:
                 ACTIONS[label]()
             except Exception as e:
                 self.logger.error(f"[SCREEN] Action failed: {e}")
+                
         else:
-            self.logger.warning(f"[SCREEN] Unknown label: {label}")        
+            self.logger.warning(f"[SCREEN] Unknown label: {label}")
