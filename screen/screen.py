@@ -100,7 +100,14 @@ class ScreenManager:
                     self.logger.info("[SCREEN] No next page for this menu")
 
             elif label in self.menus:
-                self.change_screen(label)
+                if label == "B->INTL" or label == "B->INTL":
+                    match label:
+                        case "B->INTL":
+                            self.start_intl()
+                        case "C->OPNL":
+                            self.start_opnl()
+                else:
+                    self.change_screen(label)
 
             else:            
                 match label:
@@ -108,10 +115,6 @@ class ScreenManager:
                         self.actions.wifi_test()
                     case "B->ServoTest":
                         self.actions.ServoTest()
-                    case "B->INTL":
-                        self.start_intl()
-                    case "C->OPNL":
-                        self.start_opnl()
                     case _:
                         self.logger.warning(f"[SCREEN] Unknown label: {label}")
 
