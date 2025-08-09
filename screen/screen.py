@@ -1,4 +1,5 @@
 from screen.action import ActionManager
+from db.fire import FireManager
 
 class ScreenManager:
     def __init__(self, display, logger):        
@@ -7,7 +8,11 @@ class ScreenManager:
         self.stack = []
         self.page = 0
         self.actions = ActionManager(display, logger)
+        self.myDb = FireManager(logger)
         self.logger.info("[SCREEN] Init")
+
+        self.input_mode = None
+        self.entered_code = ""
 
         self.menus = {
             "splas": [("", "Lumioun System"), ("", ""), ("", "Booting")],
@@ -51,40 +56,97 @@ class ScreenManager:
             self.logger.info("[SCREEN] Already at root menu")
 
     def handle_input(self, key):
-        key = key.upper()
-        menu_items = self.menus.get(self.current_menu, [])
-        key_map = dict(menu_items)
+        if self.input_mode in ['INTL', 'OPNL']:            
+            if key.isdigit():
+                self.entered_code += key
+                self.display.displayScreen([
+                    f"{self.input_mode} MODE",
+                    "Enter Code:",
+                    "*" * len(self.entered_code)
+                ])
 
-        if key not in key_map:
-            self.logger.info(f"[SCREEN] Invalid key: {key}")
-            return
-        
-        label = key_map[key]
-        self.logger.info(f"[SCREEN] Key {key} → {label}")
+                if len(self.entered_code) == 6:
+                    if self.input_mode == 'INTL':
+                        self.finalize_intl()
+                    elif self.input_mode == 'OPNL':
+                        self.finalize_opnl()
+            elif key == "#":
+                self.reset_input_mode()
+        else:
+            key = key.upper()
+            menu_items = self.menus.get(self.current_menu, [])
+            key_map = dict(menu_items)
 
-        if key == "#":
-            self.go_back()
+            if key not in key_map:
+                self.logger.info(f"[SCREEN] Invalid key: {key}")
+                return
+            
+            label = key_map[key]
+            self.logger.info(f"[SCREEN] Key {key} → {label}")
 
-        elif label == "D->Next" or label == "Next":            
-            sysc_pages = ["A->SYSC", "menub", "menuc"]
-            if self.current_menu in sysc_pages:
-                idx = sysc_pages.index(self.current_menu)
-                next_idx = (idx + 1) % len(sysc_pages)
-                self.stack.append(self.current_menu)
-                self.current_menu = sysc_pages[next_idx]
-                self.page = 0
-                self.show_screen()
-            else:
-                self.logger.info("[SCREEN] No next page for this menu")
+            if key == "#":
+                self.go_back()
 
-        elif label in self.menus:
-            self.change_screen(label)
+            elif label == "D->Next" or label == "Next":            
+                sysc_pages = ["A->SYSC", "menub", "menuc"]
+                if self.current_menu in sysc_pages:
+                    idx = sysc_pages.index(self.current_menu)
+                    next_idx = (idx + 1) % len(sysc_pages)
+                    self.stack.append(self.current_menu)
+                    self.current_menu = sysc_pages[next_idx]
+                    self.page = 0
+                    self.show_screen()
+                else:
+                    self.logger.info("[SCREEN] No next page for this menu")
 
-        else:            
-            match label:
-                case "A->WIFITest":
-                    self.actions.wifi_test()
-                case "B->ServoTest":
-                    self.actions.ServoTest()
-                case _:
-                    self.logger.warning(f"[SCREEN] Unknown label: {label}")
+            elif label in self.menus:
+                self.change_screen(label)
+
+            else:            
+                match label:
+                    case "A->WIFITest":
+                        self.actions.wifi_test()
+                    case "B->ServoTest":
+                        self.actions.ServoTest()
+                    case "B->INTL":
+                        self.start_intl()
+                    case "C->OPNL":
+                        self.start_opnl()
+                    case _:
+                        self.logger.warning(f"[SCREEN] Unknown label: {label}")
+
+    
+    def start_intl(self):
+        self.logger.info("[INTL] Start - Waiting for code input")
+        self.input_mode = 'INTL'
+        self.entered_code = ""
+        self.display.displayScreen(["INTL MODE", "Enter 6-digit code:"])
+
+    def start_opnl(self):
+        self.logger.info("[OPNL] Start - Waiting for code input")
+        self.input_mode = 'OPNL'
+        self.entered_code = ""
+        self.display.displayScreen(["OPNL MODE", "Enter 6-digit code:"])
+
+    def finalize_intl(self):
+        code = self.entered_code
+        self.logger.info(f"[INTL] Code set to {code}")
+        self.myDb.update_document({"status": "closed", "code": code})
+        self.display.displayScreen(["Lock Init Done"])
+        self.reset_input_mode()
+
+    def finalize_opnl(self):
+        doc = self.myDb.get_document()
+        if doc and doc.get("code") == self.entered_code:
+            self.logger.info("[OPNL] Code matched, unlocking")
+            self.myDb.update_document({"status": "open", "code": "000000"})            
+            self.display.displayScreen(["Lock Opened"])
+        else:
+            self.logger.warning("[OPNL] Wrong code")
+            self.display.displayScreen(["Wrong Code"])
+        self.reset_input_mode()
+
+    def reset_input_mode(self):
+        self.input_mode = None
+        self.entered_code = ""
+        self.display.displayScreen(["# -> Back to Menu"])

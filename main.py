@@ -4,7 +4,6 @@ from utils.logger import get_logger
 from input.keypad import KeypadHandler
 from output.oled import OLEDDisplay
 from screen.screen import ScreenManager
-from db.fire import FireManager
 
 logger = get_logger()
 logger.info("[MAIN] Starting program")
@@ -22,10 +21,9 @@ def main():
     print("[MAIN] Starting main loop")    
     myDisplay = OLEDDisplay(logger)
     myNav = ScreenManager(myDisplay, logger)
-    myNav.show_screen()
-    myDb = FireManager(logger)
+    myNav.show_screen()    
     time.sleep(2)
-    myNav.main_screen()    
+    myNav.main_screen()
     time.sleep(1)
     try:
         while True:

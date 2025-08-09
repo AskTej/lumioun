@@ -15,7 +15,7 @@ class ActionManager:
             subprocess.check_call(["ping", "-c", "1", "8.8.8.8"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
             connected = True
         except subprocess.CalledProcessError:
-            connected = False    
+            connected = False
         ip_address = "N/A"
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
