@@ -80,14 +80,11 @@ class ScreenManager:
         elif label in self.menus:
             self.change_screen(label)
 
-        else:
-            if not hasattr(self, "action_manager"):
-                self.action_manager = ActionManager(self.display, self.logger)
-
+        else:            
             match label:
                 case "A->WIFITest":
-                    self.action_manager.wifi_test()
+                    self.actions.wifi_test()
                 case "B->ServoTest":
-                    self.action_manager.ServoTest()
+                    self.actions.ServoTest()
                 case _:
                     self.logger.warning(f"[SCREEN] Unknown label: {label}")
