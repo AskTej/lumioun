@@ -86,6 +86,7 @@ class ScreenManager:
 
             if key not in key_map:
                 self.logger.info(f"[SCREEN] Invalid key: {key}")
+                self.goto_main()
                 return
             
             label = key_map[key]
