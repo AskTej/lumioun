@@ -1,4 +1,4 @@
-from screen.action import ACTIONS
+from screen.action import ActionManager
 
 class ScreenManager:
     def __init__(self, display, logger):        
@@ -6,6 +6,7 @@ class ScreenManager:
         self.logger = logger
         self.stack = []
         self.page = 0
+        self.actions = ActionManager(display, logger)
         self.logger.info("[SCREEN] Init")
 
         self.menus = {
@@ -79,12 +80,14 @@ class ScreenManager:
         elif label in self.menus:
             self.change_screen(label)
 
-        elif label in ACTIONS:
-            self.logger.info(f"[SCREEN] Executing action: {label}")
-            try:
-                ACTIONS[label]()
-            except Exception as e:
-                self.logger.error(f"[SCREEN] Action failed: {e}")
-                
         else:
-            self.logger.warning(f"[SCREEN] Unknown label: {label}")
+            if not hasattr(self, "action_manager"):
+                self.action_manager = ActionManager(self.display, self.logger)
+
+            match label:
+                case "A->WIFITest":
+                    self.action_manager.wifi_test()
+                case "B->ServoTest":
+                    self.action_manager.ServoTest()
+                case _:
+                    self.logger.warning(f"[SCREEN] Unknown label: {label}")

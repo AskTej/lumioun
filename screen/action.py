@@ -1,30 +1,37 @@
-def wifi_test(logger):
-    logger.info("Running WiFi Test...")
+from output.servo import Servo
 
-def servo_test(logger):
-    logger.info("Running Servo Test...")
+import subprocess
+import socket
 
-def bno_test(logger):
-    logger.info("Running BNO055 Test...")
+class ActionManager:    
+    def __init__(self, display, logger):        
+        self.servo = Servo(logger)
+        self.display = display
+        self.logger = logger
 
-def sim900_test(logger):
-    logger.info("Running SIM900 Test...")
+    def wifi_test(self):
+        self.logger.info("[WIFI TEST] Starting")    
+        try:
+            subprocess.check_call(["ping", "-c", "1", "8.8.8.8"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            connected = True
+        except subprocess.CalledProcessError:
+            connected = False    
+        ip_address = "N/A"
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            ip_address = s.getsockname()[0]
+            s.close()
+        except:
+            pass
 
-def sim900_boot(logger):
-    logger.info("Booting SIM900...")
+        status_text = "Connected" if connected else "Not Connected"
+        self.logger.info(f"[WIFI TEST] Status: {status_text}, IP: {ip_address}")
 
-def loc_sim(logger):
-    logger.info("Checking SIM location...")
+        if self.display:
+            self.display.displayScreen(["WIFI TEST", status_text, f"IP: {ip_address}", "#->Back"])
+        self.logger.info("Running WiFi Test...")
 
-def loc_gps(logger):
-    logger.info("Checking GPS location...")
-
-ACTIONS = {
-    "WIFITest": wifi_test,
-    "ServoTest": servo_test,
-    "BNOTest": bno_test,
-    "SIM900Test": sim900_test,
-    "SIM900 Boot": sim900_boot,
-    "LOCSIM": loc_sim,
-    "LOCGPS": loc_gps,
-}
+    def ServoTest(self):
+        if self.servo:
+            self.servo.test()
