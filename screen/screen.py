@@ -134,7 +134,7 @@ class ScreenManager:
     def finalize_intl(self):
         code = self.entered_code
         self.logger.info(f"[INTL] Code set to {code}")
-        self.myDb.update_document({"status": "closed", "code": code})
+        self.myDb.db.update_document({"status": "closed", "code": code})
         self.display.displayScreen(["Lock Init Done"])
         self.reset_input_mode()
 
@@ -142,7 +142,7 @@ class ScreenManager:
         doc = self.myDb.get_document()
         if doc and doc.get("code") == self.entered_code:
             self.logger.info("[OPNL] Code matched, unlocking")
-            self.myDb.update_document({"status": "open", "code": "000000"})            
+            self.myDb.db.update_document({"status": "open", "code": "000000"})            
             self.display.displayScreen(["Lock Opened"])
         else:
             self.logger.warning("[OPNL] Wrong code")
