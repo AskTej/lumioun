@@ -152,7 +152,7 @@ class ScreenManager:
         self.reset_input_mode()
 
     def finalize_opnl(self):
-        doc = self.myDb.get_document()
+        doc = self.myDb.db.child("devices").child(self.myDb.device_id).get().val()
         if doc and doc.get("code") == self.entered_code:
             self.logger.info("[OPNL] Code matched, unlocking")
             self.myDb.db.child("devices").child(self.myDb.device_id).update({
