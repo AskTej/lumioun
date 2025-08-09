@@ -1,3 +1,4 @@
+from typing import Literal
 from screen.action import ActionManager
 from db.fire import FireManager
 
@@ -55,6 +56,12 @@ class ScreenManager:
         else:
             self.logger.info("[SCREEN] Already at root menu")
 
+    def goto_main(self):
+        self.stack = []
+        self.current_menu = "main"
+        self.page = 0
+        self.show_screen()        
+
     def handle_input(self, key):
         if self.input_mode in ['INTL', 'OPNL']:            
             if key.isdigit():
@@ -100,7 +107,7 @@ class ScreenManager:
                     self.logger.info("[SCREEN] No next page for this menu")
 
             elif label in self.menus:
-                if label == "B->INTL" or label == "B->INTL":
+                if label == "B->INTL" or label == "C->OPNL":
                     match label:
                         case "B->INTL":
                             self.start_intl()
@@ -115,6 +122,8 @@ class ScreenManager:
                         self.actions.wifi_test()
                     case "B->ServoTest":
                         self.actions.ServoTest()
+                    case "# -> Back to Menu":
+                        self.goto_main()
                     case _:
                         self.logger.warning(f"[SCREEN] Unknown label: {label}")
 
@@ -157,5 +166,5 @@ class ScreenManager:
 
     def reset_input_mode(self):
         self.input_mode = None
-        self.entered_code = ""
+        self.entered_code: Literal[''] = ""
         self.display.displayScreen(["# -> Back to Menu"])
