@@ -2,6 +2,7 @@ from typing import Literal
 from screen.action import ActionManager
 from db.fire import FireManager
 from utils.location import LocationManager
+import time
 
 class ScreenManager:
     def __init__(self, display, logger):        
@@ -169,6 +170,7 @@ class ScreenManager:
             "code": code
         })
         self.display.displayScreen(["Lock Init Done"])
+        time.sleep(2)
         self.reset_input_mode()
 
     def finalize_opnl(self):
@@ -176,6 +178,7 @@ class ScreenManager:
         if not doc:
             self.logger.warning("[OPNL] No device data found")
             self.display.displayScreen(["Device Error"])
+            time.sleep(2)
             self.reset_input_mode()
             return
         
@@ -196,6 +199,7 @@ class ScreenManager:
                     self.unlock_device()
                 else:
                     self.display.displayScreen(["Location Error"])
+        time.sleep(2)
         self.reset_input_mode()
 
     def unlock_device(self):
@@ -204,7 +208,7 @@ class ScreenManager:
             "status": "open",
             "code": "000000"
         })
-        self.display.displayScreen(["Lock Opened"])
+        self.display.displayScreen(["Lock Opened"])        
 
     def reset_input_mode(self):
         self.input_mode = None
