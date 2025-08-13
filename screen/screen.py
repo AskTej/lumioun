@@ -3,6 +3,7 @@ from screen.action import ActionManager
 from db.fire import FireManager
 from utils.location import LocationManager
 import time
+import math
 
 class ScreenManager:
     def __init__(self, display, logger):        
@@ -214,3 +215,14 @@ class ScreenManager:
         self.input_mode = None
         self.entered_code: Literal[''] = ""
         self.display.displayScreen(["# -> Back to Menu"])
+
+    def is_within_distance(self, lat1, lon1, lat2, lon2, max_meters):        
+        R = 6371000
+        phi1, phi2 = math.radians(lat1), math.radians(lat2)
+        dphi = math.radians(lat2 - lat1)
+        dlambda = math.radians(lon2 - lon1)
+
+        a = math.sin(dphi/2)**2 + math.cos(phi1) * math.cos(phi2) * math.sin(dlambda/2)**2
+        c = 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
+        distance = R * c
+        return distance <= max_meters
