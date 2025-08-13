@@ -35,10 +35,11 @@ def main():
     except KeyboardInterrupt:
         logger.info("[MAIN] Exiting on Ctrl+C")
     myDisplay.clear()
+    myNav.locMan.stop()
 
 if __name__ == "__main__":
     try:
-        main()    
+        main()
     except Exception as e:
         logger.info(f"[MAIN] Fatal error: {e}")
     finally:

@@ -33,5 +33,7 @@ class ActionManager:
         self.logger.info("Running WiFi Test...")
 
     def ServoTest(self):
+        self.logger.info("[SERVO TEST] Init")
         if self.servo:
             self.servo.test()
+        self.logger.info("[SERVO TEST] Done")

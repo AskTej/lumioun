@@ -1,6 +1,7 @@
 from typing import Literal
 from screen.action import ActionManager
 from db.fire import FireManager
+from utils.location import LocationManager
 
 class ScreenManager:
     def __init__(self, display, logger):        
@@ -11,6 +12,7 @@ class ScreenManager:
         self.actions = ActionManager(display, logger)
         self.myDb = FireManager(logger)
         self.logger.info("[SCREEN] Init")
+        self.locMan = LocationManager(self.myDb, logger)
 
         self.input_mode = None
         self.entered_code = ""
@@ -121,6 +123,8 @@ class ScreenManager:
                 match label:
                     case "A->WIFITest":
                         self.actions.wifi_test()
+                    case "A->WIFI Loc":
+                        self.show_wifi_location()
                     case "B->ServoTest":
                         self.actions.ServoTest()
                     case "# -> Back to Menu":
@@ -128,7 +132,23 @@ class ScreenManager:
                     case _:
                         self.logger.warning(f"[SCREEN] Unknown label: {label}")
 
-    
+    def show_wifi_location(self):
+        if self.locMan.is_wifi_connected():
+            lat, lon = self.locMan.get_wifi_location()
+            self.display.displayScreen([
+                "WiFi Status: Connected",
+                f"Lat: {lat}",
+                f"Lon: {lon}",
+                "# -> Back"
+            ])
+        else:
+            self.display.displayScreen([
+                "WiFi Status: Not Connected",
+                "Lat: 0",
+                "Lon: 0",
+                "# -> Back"
+            ])
+
     def start_intl(self):
         self.logger.info("[INTL] Start - Waiting for code input")
         self.input_mode = 'INTL'
@@ -153,17 +173,38 @@ class ScreenManager:
 
     def finalize_opnl(self):
         doc = self.myDb.db.child("devices").child(self.myDb.device_id).get().val()
-        if doc and doc.get("code") == self.entered_code:
-            self.logger.info("[OPNL] Code matched, unlocking")
-            self.myDb.db.child("devices").child(self.myDb.device_id).update({
-                "status": "open",
-                "code": "000000"
-            })
-            self.display.displayScreen(["Lock Opened"])
+        if not doc:
+            self.logger.warning("[OPNL] No device data found")
+            self.display.displayScreen(["Device Error"])
+            self.reset_input_mode()
+            return
+        
+        code_match = (doc.get("code") == self.entered_code)
+        clat, clon = float(doc.get("clat", 0)), float(doc.get("clon", 0))
+        dlat, dlon = float(doc.get("dlat", 0)), float(doc.get("dlon", 0))
+
+        if clat == 0 and clon == 0:
+            if code_match:
+                self.unlock_device()
+            else:
+                self.display.displayScreen(["Wrong Code"])
         else:
-            self.logger.warning("[OPNL] Wrong code")
-            self.display.displayScreen(["Wrong Code"])
+            if not code_match:
+                self.display.displayScreen(["Wrong Code"])
+            else:
+                if self.is_within_distance(clat, clon, dlat, dlon, 5):
+                    self.unlock_device()
+                else:
+                    self.display.displayScreen(["Location Error"])
         self.reset_input_mode()
+
+    def unlock_device(self):
+        self.logger.info("[OPNL] Code matched, unlocking")
+        self.myDb.db.child("devices").child(self.myDb.device_id).update({
+            "status": "open",
+            "code": "000000"
+        })
+        self.display.displayScreen(["Lock Opened"])
 
     def reset_input_mode(self):
         self.input_mode = None
